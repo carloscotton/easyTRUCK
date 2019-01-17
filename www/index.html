@@ -43,18 +43,21 @@
 </head>
 
 <body>
-    <div class="app">
-        <h1>EASYTRUCK</h1>
-        <div id="deviceready" class="blink">
+    <div class="app" style="vertical-align: top;">
+        <div id="deviceready">
             <p class="event listening">Connecting to Device</p>
-            <p class="event received">EasyTruckAPP</p>
-            <div id="datosproy">
-            <p>Ingresa el número de proyecto:</p>
+            <p class="event received">EasyTruckAPP V 0.2</p>
+            <div id="datosproy" class="blink">
+                <h3>Instrucciones:</h3>
+                <p>Para poder hacer seguimiento de un proyecto, debes poseer el código único del proyecto, este código puedes obtenerlo en la información detallada del proyecto en: <a href="http://www.easytruck.com.gt"> EASYtruck</a></p>
+            <p>Ingresa el ID del Proyecto:</p>
             <form>
             <input id="proyid" name="proyid" />
                 <input type="submit" value="HACER TRACK" onclick="javascript:track_et();" />
             </form>
                 </div>
+            <div id="miboton"></div>
+            <div id="appstatus" class="blink"></div>
             <div id="geolocation"></div>
         </div>
     </div>
@@ -73,12 +76,17 @@
         var element = document.getElementById('geolocation');
         var posicionnueva= 'Timestamp: ' + position.timestamp  + '<br /> Latitude: '  + position.coords.latitude + '<br /> Longitude: ' + position.coords.longitude + '<br /> <hr />';
         
-        
+
         //inicia llamada de PHP A BASE DE DATOS
                 var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-               // document.getElementById("txtHint").innerHTML = this.responseText;
+               document.getElementById("appstatus").innerHTML = this.responseText; 
+                
+               //ESTADOS DE LA BASE DE DATOS
+                
+                
+                
             }
         };
         var hproy = document.getElementById('hideproy').value;
@@ -86,8 +94,8 @@
         xmlhttp.send();
         
         //FINALIZA LLAMADA A BASE DE DATOS
-        
-       element.innerHTML = element.innerHTML +  posicionnueva; 
+        //escribe datos de último punto leido y lo acumula en los otros.
+      // element.innerHTML = element.innerHTML +  posicionnueva; 
         
     }
         
@@ -106,11 +114,16 @@
     //
 function track_et(){
     var elproyid = document.getElementById('proyid').value;
-            alert("INICIANDO TRACKING DE: " + elproyid);
-    var watchID = navigator.geolocation.watchPosition(onSuccess_et, onError_et, { timeout: 3000 });
+            //alert("INICIANDO TRACKING DE: " + elproyid);
+    var watchID = navigator.geolocation.watchPosition(onSuccess_et, onError_et, { timeout: 30000 });
             alert("EN SEGUIMIENTO DE: " + elproyid);
-    document.getElementById('datosproy').innerHTML = "<h2>Siguiendo : " + elproyid + '</h2><input type="hidden" id="hideproy" name="hideproy" value="' + elproyid + '" />';
+    document.getElementById('datosproy').innerHTML = '<h2>REPORTANDO : <span style="color: #FF0000;">' + elproyid + '</span></h2><input type="hidden" id="hideproy" name="hideproy" value="' + elproyid + '" />';
+    document.getElementById('miboton').innerHTML ='<br /><input type="submit" value="FINALIZAR" onclick="javascript:recargarpage();" />';
+      document.getElementById('appstatus').innerHTML ='<br />CONECTANDO CON SISTEMA <strong>EASYTRUCK</strong>, POR FAVOR ESPERE.';
         }
+        function recargarpage() {
+  location.reload();
+}
     </script>
 </body>
 
